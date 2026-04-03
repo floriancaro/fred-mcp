@@ -1,0 +1,59 @@
+from __future__ import annotations
+
+import asyncio
+import os
+import time
+from collections import deque
+
+import httpx
+
+BASE_URL = "https://api.stlouisfed.org/fred/"
+RATE_LIMIT = 120
+RATE_WINDOW = 60  # seconds
+
+
+class FredAPIError(Exception):
+    """Raised when the FRED API returns an error response."""
+
+    def __init__(self, error_code: int, error_message: str):
+        self.error_code = error_code
+        self.error_message = error_message
+        super().__init__(f"FRED API error {error_code}: {error_message}")
+
+
+class FredClient:
+    def __init__(self) -> None:
+        api_key = os.environ.get("FRED_API_KEY")
+        if not api_key:
+            raise RuntimeError(
+                "FRED_API_KEY environment variable is not set. "
+                "Get a free API key at https://fred.stlouisfed.org/docs/api/api_key.html"
+            )
+        self._api_key = api_key
+        self._http = httpx.AsyncClient(base_url=BASE_URL, timeout=30.0)
+        self._request_times: deque[float] = deque()
+
+    async def _rate_limit(self) -> None:
+        now = time.monotonic()
+        while self._request_times and now - self._request_times[0] > RATE_WINDOW:
+            self._request_times.popleft()
+        if len(self._request_times) >= RATE_LIMIT:
+            sleep_time = RATE_WINDOW - (now - self._request_times[0])
+            if sleep_time > 0:
+                await asyncio.sleep(sleep_time)
+        self._request_times.append(time.monotonic())
+
+    async def get(self, endpoint: str, params: dict | None = None) -> dict:
+        await self._rate_limit()
+        request_params = {k: v for k, v in (params or {}).items() if v is not None}
+        request_params["api_key"] = self._api_key
+        request_params["file_type"] = "json"
+        response = await self._http.get(endpoint, params=request_params)
+        response.raise_for_status()
+        data = response.json()
+        if "error_code" in data:
+            raise FredAPIError(data["error_code"], data["error_message"])
+        return data
+
+    async def close(self) -> None:
+        await self._http.aclose()

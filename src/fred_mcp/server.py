@@ -17,6 +17,10 @@ def get_client() -> FredClient:
 
 # Tool registrations (import triggers @mcp.tool decorators)
 import fred_mcp.tools.series  # noqa: F401
+import fred_mcp.tools.categories  # noqa: F401
+import fred_mcp.tools.releases  # noqa: F401
+import fred_mcp.tools.sources  # noqa: F401
+import fred_mcp.tools.tags  # noqa: F401
 
 
 def main():

@@ -1,5 +1,7 @@
 import os
+
 import pytest
+
 from fred_mcp.client import FredClient
 
 HAVE_API_KEY = bool(os.environ.get("FRED_API_KEY"))

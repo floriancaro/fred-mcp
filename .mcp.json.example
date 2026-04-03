@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fred": {
+      "command": "python",
+      "args": ["-m", "fred_mcp"],
+      "cwd": "/path/to/fred-mcp",
+      "env": {
+        "FRED_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}

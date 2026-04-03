@@ -17,7 +17,7 @@ An MCP (Model Context Protocol) server that provides access to the full [FRED AP
 ## Installation
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/fred-mcp.git
+git clone https://github.com/floriancaro/fred-mcp.git
 cd fred-mcp
 pip install -e .
 ```
@@ -26,14 +26,15 @@ pip install -e .
 
 ### Claude Code
 
-Add to your Claude Code MCP settings (`~/.claude/settings.json` or project `.claude/settings.json`):
+Add to your MCP config (`~/.claude/.mcp.json` for global, or `.mcp.json` in your project root):
 
 ```json
 {
   "mcpServers": {
     "fred": {
-      "command": "uv",
-      "args": ["run", "--directory", "/path/to/fred-mcp", "python", "-m", "fred_mcp"],
+      "command": "python",
+      "args": ["-m", "fred_mcp"],
+      "cwd": "/path/to/fred-mcp",
       "env": {
         "FRED_API_KEY": "your-api-key-here"
       }
@@ -41,6 +42,8 @@ Add to your Claude Code MCP settings (`~/.claude/settings.json` or project `.cla
   }
 }
 ```
+
+A `.mcp.json.example` file is included in the repo — copy it and fill in your key.
 
 ### Claude Desktop
 

@@ -1,14 +1,30 @@
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.egg-info/
+*.egg
+.eggs/
+
+# Build
 dist/
 build/
-.eggs/
-*.egg
+
+# Virtual environments
 .env
 .venv/
 venv/
+
+# Testing
 .pytest_cache/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Linting
 .ruff_cache/
-fred_api_key.txt
+
+# Claude Code
+.claude/
+CLAUDE.md

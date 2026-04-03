@@ -17,24 +17,50 @@ An MCP (Model Context Protocol) server that provides access to the full [FRED AP
 ## Installation
 
 ```bash
+pip install git+https://github.com/floriancaro/fred-mcp.git
+```
+
+Or for development:
+
+```bash
 git clone https://github.com/floriancaro/fred-mcp.git
 cd fred-mcp
-pip install -e .
+pip install -e ".[dev]"
 ```
 
 ## Configuration
 
-### Claude Code
+After installing, configure the MCP server for your preferred client.
 
-Add to your MCP config (`~/.claude/.mcp.json` for global, or `.mcp.json` in your project root):
+### Claude Code (CLI)
+
+Add the server globally (available in all projects):
+
+```bash
+claude mcp add fred -s user -e FRED_API_KEY=your-api-key-here -- fred-mcp
+```
+
+Or add it to a specific project only:
+
+```bash
+claude mcp add fred -e FRED_API_KEY=your-api-key-here -- fred-mcp
+```
+
+Verify it's connected:
+
+```bash
+claude mcp list
+```
+
+### Claude Code (project config)
+
+Alternatively, create a `.mcp.json` file in your project root:
 
 ```json
 {
   "mcpServers": {
     "fred": {
-      "command": "python",
-      "args": ["-m", "fred_mcp"],
-      "cwd": "/path/to/fred-mcp",
+      "command": "fred-mcp",
       "env": {
         "FRED_API_KEY": "your-api-key-here"
       }
@@ -43,19 +69,20 @@ Add to your MCP config (`~/.claude/.mcp.json` for global, or `.mcp.json` in your
 }
 ```
 
-A `.mcp.json.example` file is included in the repo — copy it and fill in your key.
+A `.mcp.json.example` file is included in the repo as a template.
 
 ### Claude Desktop
 
-Add to `claude_desktop_config.json`:
+Add to your Claude Desktop config file:
+
+- **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
     "fred": {
-      "command": "python",
-      "args": ["-m", "fred_mcp"],
-      "cwd": "/path/to/fred-mcp",
+      "command": "fred-mcp",
       "env": {
         "FRED_API_KEY": "your-api-key-here"
       }
@@ -63,6 +90,8 @@ Add to `claude_desktop_config.json`:
   }
 }
 ```
+
+Restart Claude Desktop after saving.
 
 ## Tools
 

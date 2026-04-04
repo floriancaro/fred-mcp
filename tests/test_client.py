@@ -194,3 +194,13 @@ async def test_get_with_base_url_no_trailing_slash(client):
     result = await client.get("series/group", base_url="https://api.stlouisfed.org/geofred")
     assert route.called
     assert result == {"series_group": []}
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_timeout_error_raised(client):
+    respx.get("https://api.stlouisfed.org/fred/series").mock(
+        side_effect=httpx.ReadTimeout("Read timed out")
+    )
+    with pytest.raises(ToolError, match="timed out"):
+        await client.get("series", {"series_id": "GNPCA"})

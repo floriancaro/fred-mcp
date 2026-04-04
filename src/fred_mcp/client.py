@@ -62,6 +62,8 @@ class FredClient:
             raise ToolError(
                 f"FRED API returned HTTP {e.response.status_code} for {endpoint}{detail}"
             ) from e
+        except httpx.TimeoutException as e:
+            raise ToolError(f"FRED API request timed out for {endpoint} (30s limit)") from e
         except httpx.RequestError as e:
             raise ToolError(f"Failed to connect to FRED API: {e}") from e
         try:

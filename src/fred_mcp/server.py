@@ -1,25 +1,28 @@
+from contextlib import asynccontextmanager
+
 from fastmcp import FastMCP
 
-from fred_mcp.client import FredClient
-
-mcp = FastMCP("fred")
-
-_client: FredClient | None = None
-
-
-def get_client() -> FredClient:
-    global _client
-    if _client is None:
-        _client = FredClient()
-    return _client
+from fred_mcp.client import get_client
+from fred_mcp.tools.categories import mcp as categories
+from fred_mcp.tools.releases import mcp as releases
+from fred_mcp.tools.series import mcp as series
+from fred_mcp.tools.sources import mcp as sources
+from fred_mcp.tools.tags import mcp as tags
 
 
-# Tool registrations (import triggers @mcp.tool decorators)
-import fred_mcp.tools.series  # noqa: F401
-import fred_mcp.tools.categories  # noqa: F401
-import fred_mcp.tools.releases  # noqa: F401
-import fred_mcp.tools.sources  # noqa: F401
-import fred_mcp.tools.tags  # noqa: F401
+@asynccontextmanager
+async def lifespan(server):
+    yield {}
+    client = await get_client()
+    await client.close()
+
+
+mcp = FastMCP("fred", lifespan=lifespan)
+mcp.mount(categories)
+mcp.mount(releases)
+mcp.mount(series)
+mcp.mount(sources)
+mcp.mount(tags)
 
 
 def main():

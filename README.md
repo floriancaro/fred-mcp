@@ -1,10 +1,15 @@
 # fred-mcp
 
-An MCP (Model Context Protocol) server that provides access to the full [FRED API](https://fred.stlouisfed.org/docs/api/fred/) (Federal Reserve Economic Data). Use it to search, explore, and retrieve economic data directly within Claude conversations.
+[![CI](https://github.com/floriancaro/fred-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/floriancaro/fred-mcp/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/fred-mcp)](https://pypi.org/project/fred-mcp/)
+[![Python](https://img.shields.io/pypi/pyversions/fred-mcp)](https://pypi.org/project/fred-mcp/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+An MCP (Model Context Protocol) server that provides access to the full [FRED API](https://fred.stlouisfed.org/docs/api/fred/) and [GeoFRED API](https://fred.stlouisfed.org/docs/api/geofred/) (Federal Reserve Economic Data). Use it to search, explore, and retrieve economic data directly within Claude conversations.
 
 ## Features
 
-- **29 tools** covering all FRED API endpoints (series, categories, releases, sources, tags)
+- **33 tools** covering all FRED and GeoFRED API endpoints (series, categories, releases, sources, tags, maps)
 - Full parameter support — no artificial limits on pagination or filtering
 - Built-in rate limiting (120 requests/minute)
 - Async HTTP client for efficient request handling
@@ -17,10 +22,16 @@ An MCP (Model Context Protocol) server that provides access to the full [FRED AP
 ## Installation
 
 ```bash
-pip install git+https://github.com/floriancaro/fred-mcp.git
+pip install fred-mcp
 ```
 
-Or for development:
+Or with [uv](https://docs.astral.sh/uv/):
+
+```bash
+uv tool install fred-mcp
+```
+
+From source:
 
 ```bash
 git clone https://github.com/floriancaro/fred-mcp.git
@@ -149,17 +160,55 @@ Restart Claude Desktop after saving.
 | `fred_related_tags` | Get related tags |
 | `fred_tags_series` | Get series matching tags |
 
+### GeoFRED (Maps)
+
+| Tool | Description |
+|------|-------------|
+| `geofred_series_group` | Get metadata for a geographic FRED series |
+| `geofred_series_data` | Get cross-sectional regional data for a geographic series |
+| `geofred_regional_data` | Get cross-sectional regional data by series group |
+| `geofred_shapes` | Get GeoJSON shape files for geographic region boundaries |
+
+## Example Prompts
+
+Once configured, you can ask Claude things like:
+
+- "What is the current US GDP growth rate?" (uses `fred_series_search` + `fred_series_observations`)
+- "Show me the unemployment rate for the past 10 years" (uses `fred_series_observations` with `observation_start`)
+- "What data releases are coming up this week?" (uses `fred_releases_dates`)
+- "Find all series related to housing starts" (uses `fred_series_search`)
+- "Compare regional unemployment rates across states" (uses `geofred_regional_data`)
+
 ## Development
 
 ```bash
+git clone https://github.com/floriancaro/fred-mcp.git
+cd fred-mcp
 pip install -e ".[dev]"
 
 # Run unit tests
-python -m pytest tests/test_client.py -v
+python -m pytest tests/test_client.py tests/test_tools.py -v
 
 # Run integration tests (requires FRED_API_KEY)
 FRED_API_KEY=your-key python -m pytest tests/test_integration.py -v
 ```
+
+## Troubleshooting
+
+**"FRED_API_KEY environment variable is not set"**
+Ensure the `FRED_API_KEY` is passed in your MCP configuration's `env` block, or set it in your shell environment.
+
+**Rate limiting**
+The server limits requests to 120 per minute (matching FRED API limits). If you hit the limit, requests will automatically wait — no action needed.
+
+**Verifying the server is running**
+```bash
+claude mcp list
+```
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request.
 
 ## License
 

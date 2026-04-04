@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-04-04
+
 ### Added
 
 - 4 GeoFRED (Maps) API tools: geofred_series_group, geofred_series_data, geofred_regional_data, geofred_shapes
@@ -14,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Parameter docstrings for LLM-facing tool descriptions
 - Server-level `instructions` for LLM client guidance
 - Example prompts and troubleshooting sections in README
+- GitHub Actions publish workflow with PyPI trusted publishing
+- Dockerfile for container-based deployment
+- Python 3.13 to CI test matrix
 
 ### Fixed
 
@@ -30,5 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unit tests with mocked HTTP and integration tests against live API
 - GitHub Actions CI for Python 3.10-3.12
 
-[Unreleased]: https://github.com/floriancaro/fred-mcp-server/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/floriancaro/fred-mcp-server/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/floriancaro/fred-mcp-server/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/floriancaro/fred-mcp-server/releases/tag/v0.1.0

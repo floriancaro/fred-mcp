@@ -35,8 +35,5 @@ notes/
 # Plans
 docs/superpowers/
 
-# Lock files
-uv.lock
-
 # Secrets
 .mcp.json

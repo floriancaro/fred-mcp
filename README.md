@@ -44,7 +44,7 @@ From source:
 ```bash
 git clone https://github.com/floriancaro/fred-mcp-server.git
 cd fred-mcp-server
-pip install -e ".[dev]"
+uv sync --dev
 ```
 
 ## Configuration
@@ -210,13 +210,13 @@ Once configured, you can ask Claude things like:
 ```bash
 git clone https://github.com/floriancaro/fred-mcp-server.git
 cd fred-mcp-server
-pip install -e ".[dev]"
+uv sync --dev
 
 # Run unit tests
-python -m pytest tests/test_client.py tests/test_tools.py -v
+uv run pytest tests/test_client.py tests/test_tools.py -v
 
 # Run integration tests (requires FRED_API_KEY)
-FRED_API_KEY=your-key python -m pytest tests/test_integration.py -v
+FRED_API_KEY=your-key uv run pytest tests/test_integration.py -v
 ```
 
 ## Troubleshooting

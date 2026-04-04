@@ -23,9 +23,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        run: uv pip install -e ".[dev]"
+        run: uv sync --locked --dev
       - name: Run tests
-        run: pytest tests/test_client.py tests/test_tools.py -v
+        run: uv run pytest tests/test_client.py tests/test_tools.py -v
 
   publish:
     needs: [lint, test]

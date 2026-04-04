@@ -35,14 +35,6 @@ Repository = "https://github.com/floriancaro/fred-mcp-server"
 Issues = "https://github.com/floriancaro/fred-mcp-server/issues"
 Changelog = "https://github.com/floriancaro/fred-mcp-server/blob/main/CHANGELOG.md"
 
-[project.optional-dependencies]
-dev = [
-    "pre-commit>=4.0",
-    "pytest>=8.0",
-    "pytest-asyncio>=0.24",
-    "respx>=0.22",
-]
-
 [project.scripts]
 fred-mcp-server = "fred_mcp.server:main"
 
@@ -57,6 +49,14 @@ src = ["src", "tests"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 ignore = ["B008"]  # Depends() in defaults is idiomatic for FastMCP
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.0",
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "respx>=0.22",
+]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

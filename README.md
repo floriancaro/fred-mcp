@@ -1,6 +1,6 @@
 # fred-mcp
 
-[![CI](https://github.com/floriancaro/fred-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/floriancaro/fred-mcp/actions/workflows/ci.yml)
+[![CI](https://github.com/floriancaro/fred-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/floriancaro/fred-mcp-server/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/fred-mcp-server)](https://pypi.org/project/fred-mcp-server/)
 [![Python](https://img.shields.io/pypi/pyversions/fred-mcp-server)](https://pypi.org/project/fred-mcp-server/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -34,13 +34,13 @@ uv tool install fred-mcp-server
 With Docker:
 
 ```bash
-docker build -t fred-mcp-server https://github.com/floriancaro/fred-mcp.git
+docker build -t fred-mcp-server https://github.com/floriancaro/fred-mcp-server.git
 ```
 
 From source:
 
 ```bash
-git clone https://github.com/floriancaro/fred-mcp.git
+git clone https://github.com/floriancaro/fred-mcp-server.git
 cd fred-mcp
 pip install -e ".[dev]"
 ```
@@ -206,7 +206,7 @@ Once configured, you can ask Claude things like:
 ## Development
 
 ```bash
-git clone https://github.com/floriancaro/fred-mcp.git
+git clone https://github.com/floriancaro/fred-mcp-server.git
 cd fred-mcp
 pip install -e ".[dev]"
 

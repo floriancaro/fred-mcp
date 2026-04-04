@@ -30,10 +30,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/floriancaro/fred-mcp"
-Repository = "https://github.com/floriancaro/fred-mcp"
-Issues = "https://github.com/floriancaro/fred-mcp/issues"
-Changelog = "https://github.com/floriancaro/fred-mcp/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/floriancaro/fred-mcp-server"
+Repository = "https://github.com/floriancaro/fred-mcp-server"
+Issues = "https://github.com/floriancaro/fred-mcp-server/issues"
+Changelog = "https://github.com/floriancaro/fred-mcp-server/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 dev = [

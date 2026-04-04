@@ -24,16 +24,18 @@ class FredClient:
         self._api_key = api_key
         self._http = httpx.AsyncClient(base_url=BASE_URL, timeout=30.0)
         self._request_times: deque[float] = deque()
+        self._rate_lock = asyncio.Lock()
 
     async def _rate_limit(self) -> None:
-        now = time.monotonic()
-        while self._request_times and now - self._request_times[0] > RATE_WINDOW:
-            self._request_times.popleft()
-        if len(self._request_times) >= RATE_LIMIT:
-            sleep_time = RATE_WINDOW - (now - self._request_times[0])
-            if sleep_time > 0:
-                await asyncio.sleep(sleep_time)
-        self._request_times.append(time.monotonic())
+        async with self._rate_lock:
+            now = time.monotonic()
+            while self._request_times and now - self._request_times[0] > RATE_WINDOW:
+                self._request_times.popleft()
+            if len(self._request_times) >= RATE_LIMIT:
+                sleep_time = RATE_WINDOW - (now - self._request_times[0])
+                if sleep_time > 0:
+                    await asyncio.sleep(sleep_time)
+            self._request_times.append(time.monotonic())
 
     async def get(self, endpoint: str, params: dict | None = None) -> dict:
         await self._rate_limit()
@@ -65,10 +67,13 @@ class FredClient:
 
 
 _client: FredClient | None = None
+_client_lock = asyncio.Lock()
 
 
-def get_client() -> FredClient:
+async def get_client() -> FredClient:
     global _client
     if _client is None:
-        _client = FredClient()
+        async with _client_lock:
+            if _client is None:
+                _client = FredClient()
     return _client

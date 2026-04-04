@@ -3,7 +3,8 @@ import pytest
 import respx
 from fastmcp.exceptions import ToolError
 
-from fred_mcp.client import FredClient
+import fred_mcp.client
+from fred_mcp.client import FredClient, get_client
 
 
 @pytest.fixture
@@ -101,6 +102,18 @@ async def test_invalid_json_raised(client):
     )
     with pytest.raises(ToolError, match="invalid JSON"):
         await client.get("series", {"series_id": "GNPCA"})
+
+
+@pytest.mark.asyncio
+async def test_get_client_returns_singleton(monkeypatch):
+    monkeypatch.setenv("FRED_API_KEY", "test-key-123")
+    fred_mcp.client._client = None
+    try:
+        a = await get_client()
+        b = await get_client()
+        assert a is b
+    finally:
+        fred_mcp.client._client = None
 
 
 @respx.mock

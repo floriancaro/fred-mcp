@@ -17,7 +17,17 @@ async def lifespan(server):
     await reset_client()
 
 
-mcp = FastMCP("fred", lifespan=lifespan)
+mcp = FastMCP(
+    "fred",
+    lifespan=lifespan,
+    instructions=(
+        "Access the Federal Reserve Economic Data (FRED) API. "
+        "Search for economic time series, retrieve observations, "
+        "explore categories, releases, sources, and tags. "
+        "Also supports GeoFRED for regional/geographic data and shape files. "
+        "All date parameters use YYYY-MM-DD format."
+    ),
+)
 mcp.mount(categories)
 mcp.mount(releases)
 mcp.mount(series)

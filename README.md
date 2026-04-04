@@ -1,8 +1,8 @@
 # fred-mcp
 
 [![CI](https://github.com/floriancaro/fred-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/floriancaro/fred-mcp/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/fred-mcp)](https://pypi.org/project/fred-mcp/)
-[![Python](https://img.shields.io/pypi/pyversions/fred-mcp)](https://pypi.org/project/fred-mcp/)
+[![PyPI](https://img.shields.io/pypi/v/fred-mcp-server)](https://pypi.org/project/fred-mcp-server/)
+[![Python](https://img.shields.io/pypi/pyversions/fred-mcp-server)](https://pypi.org/project/fred-mcp-server/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 An MCP (Model Context Protocol) server that provides access to the full [FRED API](https://fred.stlouisfed.org/docs/api/fred/) and [GeoFRED API](https://fred.stlouisfed.org/docs/api/geofred/) (Federal Reserve Economic Data). Use it to search, explore, and retrieve economic data directly within Claude conversations.
@@ -22,13 +22,13 @@ An MCP (Model Context Protocol) server that provides access to the full [FRED AP
 ## Installation
 
 ```bash
-pip install fred-mcp
+pip install fred-mcp-server
 ```
 
 Or with [uv](https://docs.astral.sh/uv/):
 
 ```bash
-uv tool install fred-mcp
+uv tool install fred-mcp-server
 ```
 
 From source:
@@ -48,13 +48,13 @@ After installing, configure the MCP server for your preferred client.
 Add the server globally (available in all projects):
 
 ```bash
-claude mcp add fred -s user -e FRED_API_KEY=your-api-key-here -- fred-mcp
+claude mcp add fred -s user -e FRED_API_KEY=your-api-key-here -- fred-mcp-server
 ```
 
 Or add it to a specific project only:
 
 ```bash
-claude mcp add fred -e FRED_API_KEY=your-api-key-here -- fred-mcp
+claude mcp add fred -e FRED_API_KEY=your-api-key-here -- fred-mcp-server
 ```
 
 Verify it's connected:
@@ -71,7 +71,7 @@ Alternatively, create a `.mcp.json` file in your project root:
 {
   "mcpServers": {
     "fred": {
-      "command": "fred-mcp",
+      "command": "fred-mcp-server",
       "env": {
         "FRED_API_KEY": "your-api-key-here"
       }
@@ -93,7 +93,7 @@ Add to your Claude Desktop config file:
 {
   "mcpServers": {
     "fred": {
-      "command": "fred-mcp",
+      "command": "fred-mcp-server",
       "env": {
         "FRED_API_KEY": "your-api-key-here"
       }

@@ -5,13 +5,13 @@
 [![Python](https://img.shields.io/pypi/pyversions/fred-mcp-server)](https://pypi.org/project/fred-mcp-server/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-An MCP (Model Context Protocol) server that provides access to the full [FRED API](https://fred.stlouisfed.org/docs/api/fred/) and [GeoFRED API](https://fred.stlouisfed.org/docs/api/geofred/) (Federal Reserve Economic Data). Use it to search, explore, and retrieve economic data directly within Claude conversations.
+An MCP (Model Context Protocol) server that provides access to the full [FRED API](https://fred.stlouisfed.org/docs/api/fred/) (Federal Reserve Economic Data), including the Maps API for regional and geographic data. Use it to search, explore, and retrieve economic data directly within Claude conversations.
 
 > **Disclaimer:** This project is not affiliated with, endorsed by, or connected to the Federal Reserve Bank of St. Louis or any Federal Reserve entity. It is an independent open-source tool that accesses the publicly available FRED API.
 
 ## Features
 
-- **33 tools** covering all FRED and GeoFRED API endpoints (series, categories, releases, sources, tags, maps)
+- **33 tools** covering all FRED API endpoints including Maps (series, categories, releases, sources, tags, maps)
 - Full parameter support — no artificial limits on pagination or filtering
 - Built-in rate limiting (120 requests/minute)
 - Async HTTP client for efficient request handling
@@ -186,7 +186,7 @@ If using the Docker image, replace the `command` field:
 | `fred_related_tags` | Get related tags |
 | `fred_tags_series` | Get series matching tags |
 
-### GeoFRED (Maps)
+### Maps
 
 | Tool | Description |
 |------|-------------|

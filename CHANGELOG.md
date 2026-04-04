@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- 4 GeoFRED (Maps) API tools: geofred_series_group, geofred_series_data, geofred_regional_data, geofred_shapes
+- 4 FRED Maps API tools: geofred_series_group, geofred_series_data, geofred_regional_data, geofred_shapes
 - Literal type constraints for `order_by`, `tag_group_id`, `output_type`, and `filter_value` parameters
 - Parameter docstrings for LLM-facing tool descriptions
 - Server-level `instructions` for LLM client guidance

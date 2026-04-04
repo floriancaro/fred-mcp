@@ -139,3 +139,14 @@ async def test_get_with_base_url_override(client):
     assert "api_key=test-key-123" in str(request.url)
     assert "file_type=json" in str(request.url)
     assert result == {"series_group": []}
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_get_with_base_url_no_trailing_slash(client):
+    route = respx.get("https://api.stlouisfed.org/geofred/series/group").mock(
+        return_value=httpx.Response(200, json={"series_group": []})
+    )
+    result = await client.get("series/group", base_url="https://api.stlouisfed.org/geofred")
+    assert route.called
+    assert result == {"series_group": []}

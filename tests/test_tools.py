@@ -36,9 +36,7 @@ async def test_fred_series_tool():
 @pytest.mark.asyncio
 async def test_fred_category_tool():
     respx.get("https://api.stlouisfed.org/fred/category").mock(
-        return_value=httpx.Response(
-            200, json={"categories": [{"id": 0, "name": "root"}]}
-        )
+        return_value=httpx.Response(200, json={"categories": [{"id": 0, "name": "root"}]})
     )
     result = await mcp.call_tool("fred_category", arguments={"category_id": 0})
     assert result.structured_content is not None

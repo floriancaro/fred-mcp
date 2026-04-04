@@ -82,8 +82,7 @@ async def fred_series_observations(
     sort_order: Literal["asc", "desc"] | None = None,
     observation_start: str | None = None,
     observation_end: str | None = None,
-    units: Literal["lin", "chg", "ch1", "pch", "pc1", "pca", "cch", "cca", "log"]
-    | None = None,
+    units: Literal["lin", "chg", "ch1", "pch", "pc1", "pca", "cch", "cca", "log"] | None = None,
     frequency: Literal[
         "d",
         "w",

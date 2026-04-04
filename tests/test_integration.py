@@ -9,6 +9,7 @@ integration = pytest.mark.skipif(
 
 # --- Series ---
 
+
 @integration
 @pytest.mark.asyncio
 async def test_series(live_client):
@@ -57,7 +58,9 @@ async def test_series_tags(live_client):
 @integration
 @pytest.mark.asyncio
 async def test_series_search_tags(live_client):
-    result = await live_client.get("series/search/tags", {"series_search_text": "monetary service index", "limit": 3})
+    result = await live_client.get(
+        "series/search/tags", {"series_search_text": "monetary service index", "limit": 3}
+    )
     assert "tags" in result
 
 
@@ -86,6 +89,7 @@ async def test_series_vintagedates(live_client):
 
 
 # --- Categories ---
+
 
 @integration
 @pytest.mark.asyncio
@@ -134,6 +138,7 @@ async def test_category_related_tags(live_client):
 
 
 # --- Releases ---
+
 
 @integration
 @pytest.mark.asyncio
@@ -203,6 +208,7 @@ async def test_release_tables(live_client):
 
 # --- Sources ---
 
+
 @integration
 @pytest.mark.asyncio
 async def test_sources(live_client):
@@ -225,6 +231,7 @@ async def test_source_releases(live_client):
 
 
 # --- Tags ---
+
 
 @integration
 @pytest.mark.asyncio

@@ -57,9 +57,7 @@ class FredClient:
         except ValueError as e:
             raise ToolError(f"FRED API returned invalid JSON for {endpoint}") from e
         if "error_code" in data:
-            raise ToolError(
-                f"FRED API error: {data.get('error_message', 'Unknown error')}"
-            )
+            raise ToolError(f"FRED API error: {data.get('error_message', 'Unknown error')}")
         return data
 
     async def close(self) -> None:

@@ -1,17 +1,22 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 import os
 import time
 from collections import deque
 
 import httpx
 from fastmcp.exceptions import ToolError
+from fastmcp.utilities.logging import get_logger
 
 BASE_URL = "https://api.stlouisfed.org/fred/"
 GEOFRED_BASE_URL = "https://api.stlouisfed.org/geofred/"
 RATE_LIMIT = 120
 RATE_WINDOW = 60  # seconds
+TIMEOUT = 30.0  # seconds
+
+logger = get_logger(__name__)
 
 
 class FredClient:
@@ -23,7 +28,7 @@ class FredClient:
                 "Get a free API key at https://fred.stlouisfed.org/docs/api/api_key.html"
             )
         self._api_key = api_key
-        self._http = httpx.AsyncClient(base_url=BASE_URL, timeout=30.0)
+        self._http = httpx.AsyncClient(base_url=BASE_URL, timeout=TIMEOUT)
         self._request_times: deque[float] = deque()
         self._rate_lock = asyncio.Lock()
 
@@ -38,6 +43,7 @@ class FredClient:
                     return
                 sleep_time = RATE_WINDOW - (now - self._request_times[0])
             if sleep_time > 0:
+                logger.warning("Rate limit reached, waiting %.1fs", sleep_time)
                 await asyncio.sleep(sleep_time)
 
     async def get(
@@ -48,9 +54,15 @@ class FredClient:
         request_params["api_key"] = self._api_key
         request_params["file_type"] = "json"
         url = f"{base_url.rstrip('/')}/{endpoint.lstrip('/')}" if base_url else endpoint
+        logger.debug("Requesting %s (%d params)", endpoint, len(request_params) - 2)
+        start = time.monotonic()
         try:
             response = await self._http.get(url, params=request_params)
             response.raise_for_status()
+            elapsed_ms = (time.monotonic() - start) * 1000
+            logger.debug(
+                "Response from %s: %d (%.0fms)", endpoint, response.status_code, elapsed_ms
+            )
         except httpx.HTTPStatusError as e:
             detail = ""
             try:
@@ -59,18 +71,26 @@ class FredClient:
                 detail = f": {msg}" if msg else ""
             except (ValueError, KeyError):
                 pass
+            level = logging.ERROR if e.response.status_code >= 500 else logging.WARNING
+            logger.log(level, "HTTP %d for %s%s", e.response.status_code, endpoint, detail)
             raise ToolError(
                 f"FRED API returned HTTP {e.response.status_code} for {endpoint}{detail}"
             ) from e
         except httpx.TimeoutException as e:
-            raise ToolError(f"FRED API request timed out for {endpoint} (30s limit)") from e
+            logger.error("Request timed out for %s", endpoint)
+            raise ToolError(
+                f"FRED API request timed out for {endpoint} ({int(TIMEOUT)}s limit)"
+            ) from e
         except httpx.RequestError as e:
+            logger.error("Connection error for %s: %s", endpoint, e)
             raise ToolError(f"Failed to connect to FRED API: {e}") from e
         try:
             data = response.json()
         except ValueError as e:
+            logger.error("Invalid JSON from %s", endpoint)
             raise ToolError(f"FRED API returned invalid JSON for {endpoint}") from e
         if "error_code" in data:
+            logger.error("API error for %s: %s", endpoint, data.get("error_message"))
             raise ToolError(f"FRED API error: {data.get('error_message', 'Unknown error')}")
         return data
 

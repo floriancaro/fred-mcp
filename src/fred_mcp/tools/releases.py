@@ -21,7 +21,10 @@ async def fred_releases(
     sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get all FRED releases of economic data."""
+    """Get all FRED releases of economic data.
+
+    Returns: dict with key 'releases'.
+    """
     return await client.get(
         "releases",
         {
@@ -46,7 +49,10 @@ async def fred_releases_dates(
     include_release_dates_with_no_data: bool | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get release dates for all FRED releases."""
+    """Get release dates for all FRED releases.
+
+    Returns: dict with key 'release_dates'.
+    """
     return await client.get(
         "releases/dates",
         {
@@ -68,7 +74,10 @@ async def fred_release(
     realtime_end: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get a specific FRED release of economic data."""
+    """Get a specific FRED release of economic data.
+
+    Returns: dict with key 'releases'.
+    """
     return await client.get(
         "release",
         {
@@ -90,7 +99,10 @@ async def fred_release_dates(
     include_release_dates_with_no_data: bool | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get release dates for a specific FRED release."""
+    """Get release dates for a specific FRED release.
+
+    Returns: dict with key 'release_dates'.
+    """
     return await client.get(
         "release/dates",
         {
@@ -120,7 +132,10 @@ async def fred_release_series(
     exclude_tag_names: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get the series on a FRED release."""
+    """Get the series on a FRED release.
+
+    Returns: dict with key 'seriess'.
+    """
     return await client.get(
         "release/series",
         {
@@ -146,7 +161,10 @@ async def fred_release_sources(
     realtime_end: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get the sources for a FRED release."""
+    """Get the sources for a FRED release.
+
+    Returns: dict with key 'sources'.
+    """
     return await client.get(
         "release/sources",
         {
@@ -177,6 +195,8 @@ async def fred_release_tags(
 
     Use related_to to filter to tags related to specified semicolon-delimited
     tag names. When related_to is set, tag_names is ignored.
+
+    Returns: dict with key 'tags'.
     """
     if related_to and tag_names:
         raise ToolError(
@@ -208,7 +228,10 @@ async def fred_release_tables(
     observation_date: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get release table trees for a FRED release."""
+    """Get release table trees for a FRED release.
+
+    Returns: dict with key 'elements'.
+    """
     return await client.get(
         "release/tables",
         {

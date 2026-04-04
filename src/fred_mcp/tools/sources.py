@@ -20,7 +20,10 @@ async def fred_sources(
     sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get all sources of economic data."""
+    """Get all sources of economic data.
+
+    Returns: dict with key 'sources'.
+    """
     return await client.get(
         "sources",
         {
@@ -41,7 +44,10 @@ async def fred_source(
     realtime_end: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get a specific source of economic data."""
+    """Get a specific source of economic data.
+
+    Returns: dict with key 'sources'.
+    """
     return await client.get(
         "source",
         {
@@ -63,7 +69,10 @@ async def fred_source_releases(
     sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get the releases for a source."""
+    """Get the releases for a source.
+
+    Returns: dict with key 'releases'.
+    """
     return await client.get(
         "source/releases",
         {

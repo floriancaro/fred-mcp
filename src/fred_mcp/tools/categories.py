@@ -18,7 +18,10 @@ async def fred_category(
     realtime_end: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get a FRED category. Use category_id=0 for the root category."""
+    """Get a FRED category. Use category_id=0 for the root category.
+
+    Returns: dict with key 'categories'.
+    """
     return await client.get(
         "category",
         {
@@ -36,7 +39,10 @@ async def fred_category_children(
     realtime_end: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get the child categories for a FRED category."""
+    """Get the child categories for a FRED category.
+
+    Returns: dict with key 'categories'.
+    """
     return await client.get(
         "category/children",
         {
@@ -54,7 +60,10 @@ async def fred_category_related(
     realtime_end: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get the related categories for a FRED category."""
+    """Get the related categories for a FRED category.
+
+    Returns: dict with key 'categories'.
+    """
     return await client.get(
         "category/related",
         {
@@ -80,7 +89,10 @@ async def fred_category_series(
     exclude_tag_names: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get the series in a FRED category."""
+    """Get the series in a FRED category.
+
+    Returns: dict with key 'seriess'.
+    """
     return await client.get(
         "category/series",
         {
@@ -119,6 +131,8 @@ async def fred_category_tags(
 
     Use related_to to filter to tags related to specified semicolon-delimited
     tag names. When related_to is set, tag_names is ignored.
+
+    Returns: dict with key 'tags'.
     """
     if related_to and tag_names:
         raise ToolError(

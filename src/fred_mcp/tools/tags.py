@@ -23,7 +23,10 @@ async def fred_tags(
     sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get all FRED tags, optionally filtered by name or group."""
+    """Get all FRED tags, optionally filtered by name or group.
+
+    Returns: dict with key 'tags'.
+    """
     return await client.get(
         "tags",
         {
@@ -54,7 +57,10 @@ async def fred_related_tags(
     sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get tags related to specified semicolon-delimited tag names."""
+    """Get tags related to specified semicolon-delimited tag names.
+
+    Returns: dict with key 'tags'.
+    """
     return await client.get(
         "related_tags",
         {
@@ -84,7 +90,10 @@ async def fred_tags_series(
     sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get series matching all specified semicolon-delimited tag names."""
+    """Get series matching all specified semicolon-delimited tag names.
+
+    Returns: dict with key 'seriess'.
+    """
     return await client.get(
         "tags/series",
         {

@@ -17,7 +17,10 @@ async def fred_series(
     realtime_end: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get metadata for a FRED series."""
+    """Get metadata for a FRED series.
+
+    Returns: dict with key 'seriess' containing a list of series metadata objects.
+    """
     return await client.get(
         "series",
         {
@@ -47,6 +50,8 @@ async def fred_series_search(
     """Search for FRED series by text.
 
     Set search_type='full_text' for full-text search or 'series_id' to search IDs.
+
+    Returns: dict with key 'seriess' containing matching series.
     """
     return await client.get(
         "series/search",
@@ -101,7 +106,10 @@ async def fred_series_observations(
     vintage_dates: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get observations (data values) for a FRED series."""
+    """Get observations (data values) for a FRED series.
+
+    Returns: dict with key 'observations' containing data points with 'date' and 'value' fields.
+    """
     return await client.get(
         "series/observations",
         {
@@ -129,7 +137,10 @@ async def fred_series_categories(
     realtime_end: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get the categories for a FRED series."""
+    """Get the categories for a FRED series.
+
+    Returns: dict with key 'categories'.
+    """
     return await client.get(
         "series/categories",
         {
@@ -147,7 +158,10 @@ async def fred_series_release(
     realtime_end: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get the release for a FRED series."""
+    """Get the release for a FRED series.
+
+    Returns: dict with key 'releases'.
+    """
     return await client.get(
         "series/release",
         {
@@ -167,7 +181,10 @@ async def fred_series_tags(
     sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get the FRED tags for a series."""
+    """Get the FRED tags for a series.
+
+    Returns: dict with key 'tags'.
+    """
     return await client.get(
         "series/tags",
         {
@@ -194,7 +211,10 @@ async def fred_series_search_tags(
     sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get the tags for a series search query."""
+    """Get the tags for a series search query.
+
+    Returns: dict with key 'tags'.
+    """
     return await client.get(
         "series/search/tags",
         {
@@ -227,7 +247,10 @@ async def fred_series_search_related_tags(
     sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get related tags for a series search, filtered by specified tags."""
+    """Get related tags for a series search, filtered by specified tags.
+
+    Returns: dict with key 'tags'.
+    """
     return await client.get(
         "series/search/related_tags",
         {
@@ -257,7 +280,10 @@ async def fred_series_updates(
     end_time: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get recently updated FRED series."""
+    """Get recently updated FRED series.
+
+    Returns: dict with key 'seriess' containing recently updated series.
+    """
     return await client.get(
         "series/updates",
         {
@@ -282,7 +308,10 @@ async def fred_series_vintagedates(
     sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get vintage dates (revision history) for a FRED series."""
+    """Get vintage dates (revision history) for a FRED series.
+
+    Returns: dict with key 'vintage_dates'.
+    """
     return await client.get(
         "series/vintagedates",
         {

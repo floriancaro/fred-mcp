@@ -1,4 +1,4 @@
-# fred-mcp
+# fred-mcp-server
 
 [![CI](https://github.com/floriancaro/fred-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/floriancaro/fred-mcp-server/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/fred-mcp-server)](https://pypi.org/project/fred-mcp-server/)
@@ -6,6 +6,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 An MCP (Model Context Protocol) server that provides access to the full [FRED API](https://fred.stlouisfed.org/docs/api/fred/) and [GeoFRED API](https://fred.stlouisfed.org/docs/api/geofred/) (Federal Reserve Economic Data). Use it to search, explore, and retrieve economic data directly within Claude conversations.
+
+> **Disclaimer:** This project is not affiliated with, endorsed by, or connected to the Federal Reserve Bank of St. Louis or any Federal Reserve entity. It is an independent open-source tool that accesses the publicly available FRED API.
 
 ## Features
 
@@ -41,7 +43,7 @@ From source:
 
 ```bash
 git clone https://github.com/floriancaro/fred-mcp-server.git
-cd fred-mcp
+cd fred-mcp-server
 pip install -e ".[dev]"
 ```
 
@@ -207,7 +209,7 @@ Once configured, you can ask Claude things like:
 
 ```bash
 git clone https://github.com/floriancaro/fred-mcp-server.git
-cd fred-mcp
+cd fred-mcp-server
 pip install -e ".[dev]"
 
 # Run unit tests

@@ -1,7 +1,8 @@
-import pytest
 import httpx
+import pytest
 import respx
 from fastmcp.exceptions import ToolError
+
 from fred_mcp.client import FredClient
 
 
@@ -52,7 +53,10 @@ async def test_fred_api_error_raised(client):
     respx.get("https://api.stlouisfed.org/fred/series").mock(
         return_value=httpx.Response(
             200,
-            json={"error_code": 400, "error_message": "Bad Request. Variable series_id is not set."},
+            json={
+                "error_code": 400,
+                "error_message": "Bad Request. Variable series_id is not set.",
+            },
         )
     )
     with pytest.raises(ToolError, match="Bad Request"):
@@ -66,6 +70,36 @@ async def test_http_error_raised(client):
         return_value=httpx.Response(500, text="Internal Server Error")
     )
     with pytest.raises(ToolError, match="HTTP 500"):
+        await client.get("series", {"series_id": "GNPCA"})
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_fred_api_error_without_message(client):
+    respx.get("https://api.stlouisfed.org/fred/series").mock(
+        return_value=httpx.Response(200, json={"error_code": 500})
+    )
+    with pytest.raises(ToolError, match="Unknown error"):
+        await client.get("series", {})
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_network_error_raised(client):
+    respx.get("https://api.stlouisfed.org/fred/series").mock(
+        side_effect=httpx.ConnectError("Connection refused")
+    )
+    with pytest.raises(ToolError, match="Failed to connect"):
+        await client.get("series", {"series_id": "GNPCA"})
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_invalid_json_raised(client):
+    respx.get("https://api.stlouisfed.org/fred/series").mock(
+        return_value=httpx.Response(200, text="not json at all")
+    )
+    with pytest.raises(ToolError, match="invalid JSON"):
         await client.get("series", {"series_id": "GNPCA"})
 
 

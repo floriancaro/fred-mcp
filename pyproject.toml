@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "fred-mcp-server"
-version = "0.2.1"
+version = "0.2.2"
 description = "MCP server for the FRED (Federal Reserve Economic Data) API"
 readme = "README.md"
 license = "MIT"

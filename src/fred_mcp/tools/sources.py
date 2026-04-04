@@ -16,7 +16,7 @@ async def fred_sources(
     realtime_end: str | None = None,
     limit: int | None = None,
     offset: int | None = None,
-    order_by: str | None = None,
+    order_by: Literal["source_id", "name", "realtime_start", "realtime_end"] | None = None,
     sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
@@ -65,7 +65,14 @@ async def fred_source_releases(
     realtime_end: str | None = None,
     limit: int | None = None,
     offset: int | None = None,
-    order_by: str | None = None,
+    order_by: Literal[
+        "release_id",
+        "name",
+        "press_release",
+        "realtime_start",
+        "realtime_end",
+    ]
+    | None = None,
     sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:

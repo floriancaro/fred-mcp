@@ -81,7 +81,21 @@ async def fred_category_series(
     realtime_end: str | None = None,
     limit: int | None = None,
     offset: int | None = None,
-    order_by: str | None = None,
+    order_by: Literal[
+        "series_id",
+        "title",
+        "units",
+        "frequency",
+        "seasonal_adjustment",
+        "realtime_start",
+        "realtime_end",
+        "last_updated",
+        "observation_start",
+        "observation_end",
+        "popularity",
+        "group_popularity",
+    ]
+    | None = None,
     sort_order: Literal["asc", "desc"] | None = None,
     filter_variable: Literal["frequency", "units", "seasonal_adjustment"] | None = None,
     filter_value: str | None = None,
@@ -117,20 +131,43 @@ async def fred_category_tags(
     realtime_start: str | None = None,
     realtime_end: str | None = None,
     tag_names: str | None = None,
-    tag_group_id: str | None = None,
+    tag_group_id: Literal["freq", "gen", "geo", "geot", "rls", "seas", "src", "cc"] | None = None,
     search_text: str | None = None,
     limit: int | None = None,
     offset: int | None = None,
-    order_by: str | None = None,
+    order_by: Literal[
+        "series_count",
+        "popularity",
+        "created",
+        "name",
+        "group_id",
+    ]
+    | None = None,
     sort_order: Literal["asc", "desc"] | None = None,
     related_to: str | None = None,
     exclude_tag_names: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get tags for a FRED category.
+    """Get tags for a FRED category, or find related tags.
 
-    Use related_to to filter to tags related to specified semicolon-delimited
-    tag names. When related_to is set, tag_names is ignored.
+    When related_to is set, returns tags related to the specified tag names
+    (uses the category/related_tags endpoint). Otherwise returns all tags
+    for the category.
+
+    Args:
+        category_id: FRED category ID.
+        realtime_start: Start of real-time period (YYYY-MM-DD).
+        realtime_end: End of real-time period (YYYY-MM-DD).
+        tag_names: Semicolon-delimited tag names to filter by.
+        tag_group_id: Tag group to filter by.
+        search_text: Search tags by text.
+        limit: Max number of results.
+        offset: Pagination offset.
+        order_by: Sort results by this field.
+        sort_order: "asc" or "desc".
+        related_to: Semicolon-delimited tag names to find related tags for.
+            When set, tag_names is ignored and the related_tags endpoint is used.
+        exclude_tag_names: Semicolon-delimited tag names to exclude.
 
     Returns: dict with key 'tags'.
     """

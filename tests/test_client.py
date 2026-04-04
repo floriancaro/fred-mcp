@@ -113,7 +113,28 @@ async def test_get_client_returns_singleton(monkeypatch):
         b = await get_client()
         assert a is b
     finally:
-        fred_mcp.client._client = None
+        await fred_mcp.client.reset_client()
+
+
+@pytest.mark.asyncio
+async def test_reset_client_closes_and_clears(monkeypatch):
+    monkeypatch.setenv("FRED_API_KEY", "test-key-123")
+    fred_mcp.client._client = None
+    # Create a client via get_client
+    client = await get_client()
+    assert fred_mcp.client._client is client
+    # Reset should close and clear
+    await fred_mcp.client.reset_client()
+    assert fred_mcp.client._client is None
+
+
+@pytest.mark.asyncio
+async def test_reset_client_noop_when_none(monkeypatch):
+    monkeypatch.setenv("FRED_API_KEY", "test-key-123")
+    fred_mcp.client._client = None
+    # Should not raise when no client exists
+    await fred_mcp.client.reset_client()
+    assert fred_mcp.client._client is None
 
 
 @respx.mock
@@ -139,6 +160,29 @@ async def test_get_with_base_url_override(client):
     assert "api_key=test-key-123" in str(request.url)
     assert "file_type=json" in str(request.url)
     assert result == {"series_group": []}
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_http_4xx_includes_fred_error_message(client):
+    respx.get("https://api.stlouisfed.org/fred/series").mock(
+        return_value=httpx.Response(
+            400,
+            json={"error_message": "Bad Request. Variable series_id is not set."},
+        )
+    )
+    with pytest.raises(ToolError, match="Variable series_id is not set"):
+        await client.get("series", {})
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_http_4xx_without_json_body(client):
+    respx.get("https://api.stlouisfed.org/fred/series").mock(
+        return_value=httpx.Response(400, text="Bad Request")
+    )
+    with pytest.raises(ToolError, match="HTTP 400"):
+        await client.get("series", {})
 
 
 @respx.mock

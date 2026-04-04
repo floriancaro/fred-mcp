@@ -87,7 +87,17 @@ async def geofred_regional_data(
 ) -> dict:
     """Get cross-sectional regional data by series group.
 
-    Supports optional transformation and aggregation parameters.
+    Args:
+        series_group: Series group ID (get from geofred_series_group).
+        region_type: Geographic region type.
+        date: Observation date (YYYY-MM-DD).
+        season: Seasonal adjustment — "SA" (adjusted), "NSA" (not adjusted),
+            "SSA" (smoothed adjusted), "SAAR"/"NSAAR" (annualized rates).
+        units: Unit description string (e.g., "Dollars", "Percent").
+        start_date: Start of date range (YYYY-MM-DD).
+        frequency: Aggregation frequency.
+        transformation: Data transformation (same codes as series observations units).
+        aggregation_method: How to aggregate — "avg", "sum", "eop".
 
     Returns: dict with keys 'meta' and 'data'.
     """
@@ -124,6 +134,12 @@ async def geofred_shapes(
     client: FredClient = Depends(get_client),
 ) -> dict:
     """Get GeoJSON shape files for geographic region boundaries.
+
+    Warning: county-level shapes can be very large (several MB of coordinate data).
+    Prefer state or broader region types when possible.
+
+    Args:
+        shape: Region type for shape boundaries.
 
     Returns: GeoJSON FeatureCollection with 'type' and 'features' keys.
     """

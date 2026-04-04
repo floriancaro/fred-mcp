@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- 4 GeoFRED (Maps) API tools: geofred_series_group, geofred_series_data, geofred_regional_data, geofred_shapes
+- Literal type constraints for `order_by`, `tag_group_id`, `output_type`, and `filter_value` parameters
+- Parameter docstrings for LLM-facing tool descriptions
+- Server-level `instructions` for LLM client guidance
+- Example prompts and troubleshooting sections in README
+
+### Fixed
+
+- Lifespan teardown no longer creates a client unnecessarily on shutdown
+- HTTP 4xx error responses now include FRED API error details
+
 ## [0.1.0] - 2026-04-03
 
 ### Added
@@ -16,3 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automatic API key injection and parameter sanitization
 - Unit tests with mocked HTTP and integration tests against live API
 - GitHub Actions CI for Python 3.10-3.12
+
+[Unreleased]: https://github.com/floriancaro/fred-mcp-server/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/floriancaro/fred-mcp-server/releases/tag/v0.1.0

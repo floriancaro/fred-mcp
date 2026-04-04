@@ -39,7 +39,22 @@ async def fred_series_search(
     realtime_end: str | None = None,
     limit: int | None = None,
     offset: int | None = None,
-    order_by: str | None = None,
+    order_by: Literal[
+        "search_rank",
+        "series_id",
+        "title",
+        "units",
+        "frequency",
+        "seasonal_adjustment",
+        "realtime_start",
+        "realtime_end",
+        "last_updated",
+        "observation_start",
+        "observation_end",
+        "popularity",
+        "group_popularity",
+    ]
+    | None = None,
     sort_order: Literal["asc", "desc"] | None = None,
     filter_variable: Literal["frequency", "units", "seasonal_adjustment"] | None = None,
     filter_value: str | None = None,
@@ -49,7 +64,19 @@ async def fred_series_search(
 ) -> dict:
     """Search for FRED series by text.
 
-    Set search_type='full_text' for full-text search or 'series_id' to search IDs.
+    Args:
+        search_text: Search query (e.g., "GDP", "unemployment rate").
+        search_type: "full_text" for full-text search, "series_id" to search series IDs.
+        realtime_start: Start of real-time period (YYYY-MM-DD).
+        realtime_end: End of real-time period (YYYY-MM-DD).
+        limit: Max number of results.
+        offset: Pagination offset.
+        order_by: Sort results by this field.
+        sort_order: "asc" or "desc".
+        filter_variable: Filter by "frequency", "units", or "seasonal_adjustment".
+        filter_value: Value to filter by (depends on filter_variable).
+        tag_names: Semicolon-delimited tag names to filter by (e.g., "usa;gdp").
+        exclude_tag_names: Semicolon-delimited tag names to exclude.
 
     Returns: dict with key 'seriess' containing matching series.
     """
@@ -101,11 +128,33 @@ async def fred_series_observations(
     ]
     | None = None,
     aggregation_method: Literal["avg", "sum", "eop"] | None = None,
-    output_type: int | None = None,
+    output_type: Literal[1, 2, 3, 4] | None = None,
     vintage_dates: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
     """Get observations (data values) for a FRED series.
+
+    Args:
+        series_id: FRED series ID (e.g., "GNPCA", "UNRATE").
+        realtime_start: Start of real-time period (YYYY-MM-DD).
+        realtime_end: End of real-time period (YYYY-MM-DD).
+        limit: Max number of results.
+        offset: Pagination offset.
+        sort_order: "asc" or "desc" by observation date.
+        observation_start: Start of observation range (YYYY-MM-DD).
+        observation_end: End of observation range (YYYY-MM-DD).
+        units: Data transformation — "lin" (levels), "chg" (change), "ch1" (change from year ago),
+            "pch" (percent change), "pc1" (percent change from year ago), "pca" (compounded annual
+            rate of change), "cch" (continuously compounded rate of change), "cca" (continuously
+            compounded annual rate of change), "log" (natural log).
+        frequency: Aggregation frequency — "d" (daily), "w" (weekly), "bw" (biweekly),
+            "m" (monthly), "q" (quarterly), "sa" (semiannual), "a" (annual).
+            Weekly variants: "wef" (Fri), "weth" (Thu), "wew" (Wed), "wetu" (Tue),
+            "wem" (Mon), "wesu" (Sun), "wesa" (Sat).
+        aggregation_method: How to aggregate — "avg" (average), "sum", "eop" (end of period).
+        output_type: 1=observations by real-time period, 2=all by vintage date,
+            3=new/revised by vintage date, 4=initial release only.
+        vintage_dates: Comma-separated vintage dates (YYYY-MM-DD).
 
     Returns: dict with key 'observations' containing data points with 'date' and 'value' fields.
     """
@@ -176,7 +225,14 @@ async def fred_series_tags(
     series_id: str,
     realtime_start: str | None = None,
     realtime_end: str | None = None,
-    order_by: str | None = None,
+    order_by: Literal[
+        "series_count",
+        "popularity",
+        "created",
+        "name",
+        "group_id",
+    ]
+    | None = None,
     sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
@@ -202,11 +258,18 @@ async def fred_series_search_tags(
     realtime_start: str | None = None,
     realtime_end: str | None = None,
     tag_names: str | None = None,
-    tag_group_id: str | None = None,
+    tag_group_id: Literal["freq", "gen", "geo", "geot", "rls", "seas", "src", "cc"] | None = None,
     tag_search_text: str | None = None,
     limit: int | None = None,
     offset: int | None = None,
-    order_by: str | None = None,
+    order_by: Literal[
+        "series_count",
+        "popularity",
+        "created",
+        "name",
+        "group_id",
+    ]
+    | None = None,
     sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
@@ -238,11 +301,18 @@ async def fred_series_search_related_tags(
     realtime_start: str | None = None,
     realtime_end: str | None = None,
     exclude_tag_names: str | None = None,
-    tag_group_id: str | None = None,
+    tag_group_id: Literal["freq", "gen", "geo", "geot", "rls", "seas", "src", "cc"] | None = None,
     tag_search_text: str | None = None,
     limit: int | None = None,
     offset: int | None = None,
-    order_by: str | None = None,
+    order_by: Literal[
+        "series_count",
+        "popularity",
+        "created",
+        "name",
+        "group_id",
+    ]
+    | None = None,
     sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
@@ -274,12 +344,21 @@ async def fred_series_updates(
     realtime_end: str | None = None,
     limit: int | None = None,
     offset: int | None = None,
-    filter_value: str | None = None,
+    filter_value: Literal["macro", "regional", "all"] | None = None,
     start_time: str | None = None,
     end_time: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
     """Get recently updated FRED series.
+
+    Args:
+        realtime_start: Start of real-time period (YYYY-MM-DD).
+        realtime_end: End of real-time period (YYYY-MM-DD).
+        limit: Max number of results.
+        offset: Pagination offset.
+        filter_value: "macro" for macroeconomic series, "regional" for regional, "all" for both.
+        start_time: Filter to series updated on or after this time (YYYYMMDDHhmm format).
+        end_time: Filter to series updated on or before this time (YYYYMMDDHhmm format).
 
     Returns: dict with key 'seriess' containing recently updated series.
     """

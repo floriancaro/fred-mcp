@@ -47,7 +47,7 @@ class FredClient:
         request_params = {k: v for k, v in (params or {}).items() if v is not None}
         request_params["api_key"] = self._api_key
         request_params["file_type"] = "json"
-        url = f"{base_url}{endpoint}" if base_url else endpoint
+        url = f"{base_url.rstrip('/')}/{endpoint.lstrip('/')}" if base_url else endpoint
         try:
             response = await self._http.get(url, params=request_params)
             response.raise_for_status()

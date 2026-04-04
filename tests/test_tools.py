@@ -1,4 +1,4 @@
-"""Comprehensive parametrized test suite for all 33 FRED MCP tools."""
+"""Comprehensive parametrized test suite for FRED MCP tools."""
 
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ async def _reset_singleton(monkeypatch):
 
 
 # ---------------------------------------------------------------------------
-# Test 1: smoke test all 29 tools
+# Test 1: smoke test all tools
 # ---------------------------------------------------------------------------
 
 TOOL_CASES = [
@@ -139,6 +139,12 @@ PARAM_FLOW_CASES = [
         {"series_id": "GNPCA", "units": "pch", "frequency": "m"},
     ),
     (
+        "geofred_series_data",
+        "https://api.stlouisfed.org/geofred/series/data",
+        {"series_id": "WIPCPI", "date": "2020-01-01", "start_date": "2019-01-01"},
+        {"series_id": "WIPCPI", "date": "2020-01-01", "start_date": "2019-01-01"},
+    ),
+    (
         "geofred_regional_data",
         "https://api.stlouisfed.org/geofred/regional/data",
         {
@@ -147,6 +153,7 @@ PARAM_FLOW_CASES = [
             "date": "2013-01-01",
             "season": "NSA",
             "units": "Dollars",
+            "start_date": "2012-01-01",
             "frequency": "a",
             "transformation": "lin",
             "aggregation_method": "avg",
@@ -157,6 +164,7 @@ PARAM_FLOW_CASES = [
             "date": "2013-01-01",
             "season": "NSA",
             "units": "Dollars",
+            "start_date": "2012-01-01",
             "frequency": "a",
             "transformation": "lin",
             "aggregation_method": "avg",

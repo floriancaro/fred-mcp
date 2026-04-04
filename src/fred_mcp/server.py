@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastmcp import FastMCP
+from fastmcp.server.middleware.logging import LoggingMiddleware
 
 from fred_mcp.client import reset_client
 from fred_mcp.tools.categories import mcp as categories
@@ -28,6 +29,7 @@ mcp = FastMCP(
         "All date parameters use YYYY-MM-DD format."
     ),
 )
+mcp.add_middleware(LoggingMiddleware())
 mcp.mount(categories)
 mcp.mount(releases)
 mcp.mount(series)

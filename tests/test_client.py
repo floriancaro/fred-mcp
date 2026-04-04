@@ -1,7 +1,8 @@
 import pytest
 import httpx
 import respx
-from fred_mcp.client import FredClient, FredAPIError
+from fastmcp.exceptions import ToolError
+from fred_mcp.client import FredClient
 
 
 @pytest.fixture
@@ -54,7 +55,7 @@ async def test_fred_api_error_raised(client):
             json={"error_code": 400, "error_message": "Bad Request. Variable series_id is not set."},
         )
     )
-    with pytest.raises(FredAPIError, match="Bad Request"):
+    with pytest.raises(ToolError, match="Bad Request"):
         await client.get("series", {})
 
 
@@ -64,7 +65,7 @@ async def test_http_error_raised(client):
     respx.get("https://api.stlouisfed.org/fred/series").mock(
         return_value=httpx.Response(500, text="Internal Server Error")
     )
-    with pytest.raises(httpx.HTTPStatusError):
+    with pytest.raises(ToolError, match="HTTP 500"):
         await client.get("series", {"series_id": "GNPCA"})
 
 

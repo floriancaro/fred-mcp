@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from fastmcp.dependencies import Depends
+from fastmcp.exceptions import ToolError
 
 from fred_mcp.server import mcp, get_client
 from fred_mcp.client import FredClient
@@ -168,7 +169,9 @@ async def fred_release_tags(
     exclude_tag_names: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get tags for a FRED release. Use related_to to filter to tags related to specified semicolon-delimited tag names."""
+    """Get tags for a FRED release. Use related_to to filter to tags related to specified semicolon-delimited tag names. When related_to is set, tag_names is ignored."""
+    if related_to and tag_names:
+        raise ToolError("Cannot use both tag_names and related_to. Use related_to to specify the tags to find related tags for.")
     endpoint = "release/related_tags" if related_to else "release/tags"
     params = {
         "release_id": release_id,

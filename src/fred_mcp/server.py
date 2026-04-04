@@ -1,5 +1,4 @@
 from fastmcp import FastMCP
-from fastmcp.dependencies import Depends
 
 from fred_mcp.client import FredClient
 

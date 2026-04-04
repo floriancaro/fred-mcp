@@ -6,19 +6,11 @@ import time
 from collections import deque
 
 import httpx
+from fastmcp.exceptions import ToolError
 
 BASE_URL = "https://api.stlouisfed.org/fred/"
 RATE_LIMIT = 120
 RATE_WINDOW = 60  # seconds
-
-
-class FredAPIError(Exception):
-    """Raised when the FRED API returns an error response."""
-
-    def __init__(self, error_code: int, error_message: str):
-        self.error_code = error_code
-        self.error_message = error_message
-        super().__init__(f"FRED API error {error_code}: {error_message}")
 
 
 class FredClient:
@@ -48,11 +40,28 @@ class FredClient:
         request_params = {k: v for k, v in (params or {}).items() if v is not None}
         request_params["api_key"] = self._api_key
         request_params["file_type"] = "json"
-        response = await self._http.get(endpoint, params=request_params)
-        response.raise_for_status()
-        data = response.json()
+        try:
+            response = await self._http.get(endpoint, params=request_params)
+            response.raise_for_status()
+        except httpx.HTTPStatusError as e:
+            raise ToolError(
+                f"FRED API returned HTTP {e.response.status_code} for {endpoint}. "
+                "The server may be temporarily unavailable — try again shortly."
+            ) from e
+        except httpx.RequestError as e:
+            raise ToolError(
+                f"Failed to connect to FRED API: {e}"
+            ) from e
+        try:
+            data = response.json()
+        except ValueError as e:
+            raise ToolError(
+                f"FRED API returned invalid JSON for {endpoint}"
+            ) from e
         if "error_code" in data:
-            raise FredAPIError(data["error_code"], data["error_message"])
+            raise ToolError(
+                f"FRED API error: {data['error_message']}"
+            )
         return data
 
     async def close(self) -> None:

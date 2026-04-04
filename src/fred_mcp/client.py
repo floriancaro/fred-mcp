@@ -27,15 +27,17 @@ class FredClient:
         self._rate_lock = asyncio.Lock()
 
     async def _rate_limit(self) -> None:
-        async with self._rate_lock:
-            now = time.monotonic()
-            while self._request_times and now - self._request_times[0] > RATE_WINDOW:
-                self._request_times.popleft()
-            if len(self._request_times) >= RATE_LIMIT:
+        while True:
+            async with self._rate_lock:
+                now = time.monotonic()
+                while self._request_times and now - self._request_times[0] > RATE_WINDOW:
+                    self._request_times.popleft()
+                if len(self._request_times) < RATE_LIMIT:
+                    self._request_times.append(now)
+                    return
                 sleep_time = RATE_WINDOW - (now - self._request_times[0])
-                if sleep_time > 0:
-                    await asyncio.sleep(sleep_time)
-            self._request_times.append(time.monotonic())
+            if sleep_time > 0:
+                await asyncio.sleep(sleep_time)
 
     async def get(self, endpoint: str, params: dict | None = None) -> dict:
         await self._rate_limit()

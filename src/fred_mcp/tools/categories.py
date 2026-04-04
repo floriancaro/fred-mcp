@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+from typing import Literal
+
+from fastmcp import FastMCP
 from fastmcp.dependencies import Depends
 from fastmcp.exceptions import ToolError
 
-from fred_mcp.server import mcp, get_client
-from fred_mcp.client import FredClient
+from fred_mcp.client import FredClient, get_client
+
+mcp = FastMCP("categories")
 
 
 @mcp.tool
@@ -69,8 +73,8 @@ async def fred_category_series(
     limit: int | None = None,
     offset: int | None = None,
     order_by: str | None = None,
-    sort_order: str | None = None,
-    filter_variable: str | None = None,
+    sort_order: Literal["asc", "desc"] | None = None,
+    filter_variable: Literal["frequency", "units", "seasonal_adjustment"] | None = None,
     filter_value: str | None = None,
     tag_names: str | None = None,
     exclude_tag_names: str | None = None,
@@ -106,14 +110,21 @@ async def fred_category_tags(
     limit: int | None = None,
     offset: int | None = None,
     order_by: str | None = None,
-    sort_order: str | None = None,
+    sort_order: Literal["asc", "desc"] | None = None,
     related_to: str | None = None,
     exclude_tag_names: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Get tags for a FRED category. Use related_to to filter to tags related to specified semicolon-delimited tag names. When related_to is set, tag_names is ignored."""
+    """Get tags for a FRED category.
+
+    Use related_to to filter to tags related to specified semicolon-delimited
+    tag names. When related_to is set, tag_names is ignored.
+    """
     if related_to and tag_names:
-        raise ToolError("Cannot use both tag_names and related_to. Use related_to to specify the tags to find related tags for.")
+        raise ToolError(
+            "Cannot use both tag_names and related_to. "
+            "Use related_to to specify the tags to find related tags for."
+        )
     endpoint = "category/related_tags" if related_to else "category/tags"
     params = {
         "category_id": category_id,

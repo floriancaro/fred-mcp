@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+from typing import Literal
+
+from fastmcp import FastMCP
 from fastmcp.dependencies import Depends
 
-from fred_mcp.server import mcp, get_client
-from fred_mcp.client import FredClient
+from fred_mcp.client import FredClient, get_client
+
+mcp = FastMCP("series")
 
 
 @mcp.tool
@@ -27,20 +31,23 @@ async def fred_series(
 @mcp.tool
 async def fred_series_search(
     search_text: str,
-    search_type: str | None = None,
+    search_type: Literal["full_text", "series_id"] | None = None,
     realtime_start: str | None = None,
     realtime_end: str | None = None,
     limit: int | None = None,
     offset: int | None = None,
     order_by: str | None = None,
-    sort_order: str | None = None,
-    filter_variable: str | None = None,
+    sort_order: Literal["asc", "desc"] | None = None,
+    filter_variable: Literal["frequency", "units", "seasonal_adjustment"] | None = None,
     filter_value: str | None = None,
     tag_names: str | None = None,
     exclude_tag_names: str | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
-    """Search for FRED series by text. Set search_type='full_text' for full-text search or 'series_id' to search IDs."""
+    """Search for FRED series by text.
+
+    Set search_type='full_text' for full-text search or 'series_id' to search IDs.
+    """
     return await client.get(
         "series/search",
         {
@@ -67,12 +74,29 @@ async def fred_series_observations(
     realtime_end: str | None = None,
     limit: int | None = None,
     offset: int | None = None,
-    sort_order: str | None = None,
+    sort_order: Literal["asc", "desc"] | None = None,
     observation_start: str | None = None,
     observation_end: str | None = None,
-    units: str | None = None,
-    frequency: str | None = None,
-    aggregation_method: str | None = None,
+    units: Literal["lin", "chg", "ch1", "pch", "pc1", "pca", "cch", "cca", "log"]
+    | None = None,
+    frequency: Literal[
+        "d",
+        "w",
+        "bw",
+        "m",
+        "q",
+        "sa",
+        "a",
+        "wef",
+        "weth",
+        "wew",
+        "wetu",
+        "wem",
+        "wesu",
+        "wesa",
+    ]
+    | None = None,
+    aggregation_method: Literal["avg", "sum", "eop"] | None = None,
     output_type: int | None = None,
     vintage_dates: str | None = None,
     client: FredClient = Depends(get_client),
@@ -140,7 +164,7 @@ async def fred_series_tags(
     realtime_start: str | None = None,
     realtime_end: str | None = None,
     order_by: str | None = None,
-    sort_order: str | None = None,
+    sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
     """Get the FRED tags for a series."""
@@ -167,7 +191,7 @@ async def fred_series_search_tags(
     limit: int | None = None,
     offset: int | None = None,
     order_by: str | None = None,
-    sort_order: str | None = None,
+    sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
     """Get the tags for a series search query."""
@@ -200,7 +224,7 @@ async def fred_series_search_related_tags(
     limit: int | None = None,
     offset: int | None = None,
     order_by: str | None = None,
-    sort_order: str | None = None,
+    sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
     """Get related tags for a series search, filtered by specified tags."""
@@ -255,7 +279,7 @@ async def fred_series_vintagedates(
     realtime_end: str | None = None,
     limit: int | None = None,
     offset: int | None = None,
-    sort_order: str | None = None,
+    sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
     """Get vintage dates (revision history) for a FRED series."""

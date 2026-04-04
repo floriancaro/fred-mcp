@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+from typing import Literal
+
+from fastmcp import FastMCP
 from fastmcp.dependencies import Depends
 
-from fred_mcp.server import mcp, get_client
-from fred_mcp.client import FredClient
+from fred_mcp.client import FredClient, get_client
+
+mcp = FastMCP("tags")
 
 
 @mcp.tool
@@ -16,7 +20,7 @@ async def fred_tags(
     limit: int | None = None,
     offset: int | None = None,
     order_by: str | None = None,
-    sort_order: str | None = None,
+    sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
     """Get all FRED tags, optionally filtered by name or group."""
@@ -47,7 +51,7 @@ async def fred_related_tags(
     limit: int | None = None,
     offset: int | None = None,
     order_by: str | None = None,
-    sort_order: str | None = None,
+    sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
     """Get tags related to specified semicolon-delimited tag names."""
@@ -77,7 +81,7 @@ async def fred_tags_series(
     limit: int | None = None,
     offset: int | None = None,
     order_by: str | None = None,
-    sort_order: str | None = None,
+    sort_order: Literal["asc", "desc"] | None = None,
     client: FredClient = Depends(get_client),
 ) -> dict:
     """Get series matching all specified semicolon-delimited tag names."""

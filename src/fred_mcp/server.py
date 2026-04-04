@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastmcp import FastMCP
 
-from fred_mcp.client import get_client
+from fred_mcp.client import reset_client
 from fred_mcp.tools.categories import mcp as categories
 from fred_mcp.tools.geo import mcp as geo
 from fred_mcp.tools.releases import mcp as releases
@@ -14,8 +14,7 @@ from fred_mcp.tools.tags import mcp as tags
 @asynccontextmanager
 async def lifespan(server):
     yield {}
-    client = await get_client()
-    await client.close()
+    await reset_client()
 
 
 mcp = FastMCP("fred", lifespan=lifespan)

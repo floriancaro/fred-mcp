@@ -31,6 +31,12 @@ Or with [uv](https://docs.astral.sh/uv/):
 uv tool install fred-mcp-server
 ```
 
+With Docker:
+
+```bash
+docker build -t fred-mcp-server https://github.com/floriancaro/fred-mcp.git
+```
+
 From source:
 
 ```bash
@@ -103,6 +109,24 @@ Add to your Claude Desktop config file:
 ```
 
 Restart Claude Desktop after saving.
+
+### Docker
+
+If using the Docker image, replace the `command` field:
+
+```json
+{
+  "mcpServers": {
+    "fred": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "-e", "FRED_API_KEY", "fred-mcp-server"],
+      "env": {
+        "FRED_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
 
 ## Tools
 

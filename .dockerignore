@@ -1,0 +1,15 @@
+.git
+.github
+.claude
+.venv
+venv
+__pycache__
+*.egg-info
+dist
+build
+notes
+docs/superpowers
+.env
+.mcp.json
+uv.lock
+.DS_Store

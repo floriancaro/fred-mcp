@@ -52,9 +52,14 @@ class FredClient:
             response = await self._http.get(url, params=request_params)
             response.raise_for_status()
         except httpx.HTTPStatusError as e:
+            detail = ""
+            try:
+                body = e.response.json()
+                detail = f": {body.get('error_message', '')}"
+            except (ValueError, KeyError):
+                pass
             raise ToolError(
-                f"FRED API returned HTTP {e.response.status_code} for {endpoint}. "
-                "The server may be temporarily unavailable — try again shortly."
+                f"FRED API returned HTTP {e.response.status_code} for {endpoint}{detail}"
             ) from e
         except httpx.RequestError as e:
             raise ToolError(f"Failed to connect to FRED API: {e}") from e

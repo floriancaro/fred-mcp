@@ -9,6 +9,7 @@ import httpx
 from fastmcp.exceptions import ToolError
 
 BASE_URL = "https://api.stlouisfed.org/fred/"
+GEOFRED_BASE_URL = "https://api.stlouisfed.org/geofred/"
 RATE_LIMIT = 120
 RATE_WINDOW = 60  # seconds
 
@@ -39,13 +40,16 @@ class FredClient:
             if sleep_time > 0:
                 await asyncio.sleep(sleep_time)
 
-    async def get(self, endpoint: str, params: dict | None = None) -> dict:
+    async def get(
+        self, endpoint: str, params: dict | None = None, *, base_url: str | None = None
+    ) -> dict:
         await self._rate_limit()
         request_params = {k: v for k, v in (params or {}).items() if v is not None}
         request_params["api_key"] = self._api_key
         request_params["file_type"] = "json"
+        url = f"{base_url.rstrip('/')}/{endpoint.lstrip('/')}" if base_url else endpoint
         try:
-            response = await self._http.get(endpoint, params=request_params)
+            response = await self._http.get(url, params=request_params)
             response.raise_for_status()
         except httpx.HTTPStatusError as e:
             raise ToolError(

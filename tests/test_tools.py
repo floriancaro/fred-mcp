@@ -1,4 +1,4 @@
-"""Comprehensive parametrized test suite for all 29 FRED MCP tools."""
+"""Comprehensive parametrized test suite for FRED MCP tools."""
 
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ async def _reset_singleton(monkeypatch):
 
 
 # ---------------------------------------------------------------------------
-# Test 1: smoke test all 29 tools
+# Test 1: smoke test all tools
 # ---------------------------------------------------------------------------
 
 TOOL_CASES = [
@@ -70,6 +70,37 @@ TOOL_CASES = [
     ("fred_tags", "tags", {}, "tags"),
     ("fred_related_tags", "related_tags", {"tag_names": "monetary aggregates"}, "tags"),
     ("fred_tags_series", "tags/series", {"tag_names": "slovenia"}, "seriess"),
+    # geo (4)
+    (
+        "geofred_series_group",
+        "https://api.stlouisfed.org/geofred/series/group",
+        {"series_id": "SMU56000000500000001a"},
+        "series_group",
+    ),
+    (
+        "geofred_series_data",
+        "https://api.stlouisfed.org/geofred/series/data",
+        {"series_id": "WIPCPI"},
+        "meta",
+    ),
+    (
+        "geofred_regional_data",
+        "https://api.stlouisfed.org/geofred/regional/data",
+        {
+            "series_group": "882",
+            "region_type": "state",
+            "date": "2013-01-01",
+            "season": "NSA",
+            "units": "Dollars",
+        },
+        "meta",
+    ),
+    (
+        "geofred_shapes",
+        "https://api.stlouisfed.org/geofred/shapes/file",
+        {"shape": "state"},
+        "type",
+    ),
 ]
 
 
@@ -77,9 +108,12 @@ TOOL_CASES = [
 @pytest.mark.asyncio
 @pytest.mark.parametrize("tool_name,endpoint,args,response_key", TOOL_CASES)
 async def test_tool_call(tool_name, endpoint, args, response_key):
-    respx.get(f"https://api.stlouisfed.org/fred/{endpoint}").mock(
-        return_value=httpx.Response(200, json={response_key: []})
+    url = (
+        endpoint
+        if endpoint.startswith("https://")
+        else f"https://api.stlouisfed.org/fred/{endpoint}"
     )
+    respx.get(url).mock(return_value=httpx.Response(200, json={response_key: []}))
     result = await mcp.call_tool(tool_name, arguments=args)
     assert result.structured_content is not None
     assert response_key in result.structured_content
@@ -104,6 +138,38 @@ PARAM_FLOW_CASES = [
         {"series_id": "GNPCA", "units": "pch", "frequency": "m"},
         {"series_id": "GNPCA", "units": "pch", "frequency": "m"},
     ),
+    (
+        "geofred_series_data",
+        "https://api.stlouisfed.org/geofred/series/data",
+        {"series_id": "WIPCPI", "date": "2020-01-01", "start_date": "2019-01-01"},
+        {"series_id": "WIPCPI", "date": "2020-01-01", "start_date": "2019-01-01"},
+    ),
+    (
+        "geofred_regional_data",
+        "https://api.stlouisfed.org/geofred/regional/data",
+        {
+            "series_group": "882",
+            "region_type": "state",
+            "date": "2013-01-01",
+            "season": "NSA",
+            "units": "Dollars",
+            "start_date": "2012-01-01",
+            "frequency": "a",
+            "transformation": "lin",
+            "aggregation_method": "avg",
+        },
+        {
+            "series_group": "882",
+            "region_type": "state",
+            "date": "2013-01-01",
+            "season": "NSA",
+            "units": "Dollars",
+            "start_date": "2012-01-01",
+            "frequency": "a",
+            "transformation": "lin",
+            "aggregation_method": "avg",
+        },
+    ),
 ]
 
 
@@ -113,9 +179,12 @@ PARAM_FLOW_CASES = [
 async def test_params_flow_to_request(tool_name, endpoint, args, expected_params):
     # Capture the request by keying the response key from tool cases lookup
     response_key = next(rc for tc, ep, _, rc in TOOL_CASES if tc == tool_name and ep == endpoint)
-    route = respx.get(f"https://api.stlouisfed.org/fred/{endpoint}").mock(
-        return_value=httpx.Response(200, json={response_key: []})
+    url = (
+        endpoint
+        if endpoint.startswith("https://")
+        else f"https://api.stlouisfed.org/fred/{endpoint}"
     )
+    route = respx.get(url).mock(return_value=httpx.Response(200, json={response_key: []}))
     await mcp.call_tool(tool_name, arguments=args)
     actual_params = dict(route.calls.last.request.url.params)
     for key, value in expected_params.items():

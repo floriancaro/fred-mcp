@@ -113,7 +113,7 @@ async def test_get_client_returns_singleton(monkeypatch):
         b = await get_client()
         assert a is b
     finally:
-        fred_mcp.client._client = None
+        await fred_mcp.client.reset_client()
 
 
 @pytest.mark.asyncio

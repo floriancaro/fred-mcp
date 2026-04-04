@@ -55,7 +55,8 @@ class FredClient:
             detail = ""
             try:
                 body = e.response.json()
-                detail = f": {body.get('error_message', '')}"
+                msg = body.get("error_message")
+                detail = f": {msg}" if msg else ""
             except (ValueError, KeyError):
                 pass
             raise ToolError(

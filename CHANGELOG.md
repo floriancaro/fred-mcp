@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-04-04
+
+### Fixed
+
+- Replace deprecated GeoFRED branding with official FRED Maps API naming
+
 ## [0.2.0] - 2026-04-04
 
 ### Added
@@ -35,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unit tests with mocked HTTP and integration tests against live API
 - GitHub Actions CI for Python 3.10-3.12
 
-[Unreleased]: https://github.com/floriancaro/fred-mcp-server/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/floriancaro/fred-mcp-server/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/floriancaro/fred-mcp-server/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/floriancaro/fred-mcp-server/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/floriancaro/fred-mcp-server/releases/tag/v0.1.0

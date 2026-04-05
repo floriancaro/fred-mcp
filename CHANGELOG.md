@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-04-04
+
+### Added
+
+- Server-side request logging via FastMCP's `LoggingMiddleware`
+- Debug-level request/response logging with timing in `FredClient`
+- 30-second HTTP timeout with descriptive error on timeout
+- Connection error handling with clear error messages
+
 ## [0.2.1] - 2026-04-04
 
 ### Fixed
@@ -41,7 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unit tests with mocked HTTP and integration tests against live API
 - GitHub Actions CI for Python 3.10-3.12
 
-[Unreleased]: https://github.com/floriancaro/fred-mcp-server/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/floriancaro/fred-mcp-server/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/floriancaro/fred-mcp-server/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/floriancaro/fred-mcp-server/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/floriancaro/fred-mcp-server/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/floriancaro/fred-mcp-server/releases/tag/v0.1.0

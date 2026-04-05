@@ -238,6 +238,13 @@ async def fred_series_tags(
 ) -> dict:
     """Get the FRED tags for a series.
 
+    Args:
+        series_id: FRED series ID (e.g., "GNPCA", "UNRATE").
+        realtime_start: Start of real-time period (YYYY-MM-DD).
+        realtime_end: End of real-time period (YYYY-MM-DD).
+        order_by: Sort results by this field.
+        sort_order: "asc" or "desc".
+
     Returns: dict with key 'tags'.
     """
     return await client.get(
@@ -274,6 +281,18 @@ async def fred_series_search_tags(
     client: FredClient = Depends(get_client),
 ) -> dict:
     """Get the tags for a series search query.
+
+    Args:
+        series_search_text: Search query to find series (e.g., "GDP", "unemployment").
+        realtime_start: Start of real-time period (YYYY-MM-DD).
+        realtime_end: End of real-time period (YYYY-MM-DD).
+        tag_names: Semicolon-delimited tag names to filter by.
+        tag_group_id: Tag group to filter by.
+        tag_search_text: Search tags by text.
+        limit: Max number of results.
+        offset: Pagination offset.
+        order_by: Sort results by this field.
+        sort_order: "asc" or "desc".
 
     Returns: dict with key 'tags'.
     """
@@ -317,6 +336,19 @@ async def fred_series_search_related_tags(
     client: FredClient = Depends(get_client),
 ) -> dict:
     """Get related tags for a series search, filtered by specified tags.
+
+    Args:
+        series_search_text: Search query to find series (e.g., "GDP", "unemployment").
+        tag_names: Semicolon-delimited tag names to find related tags for (required).
+        realtime_start: Start of real-time period (YYYY-MM-DD).
+        realtime_end: End of real-time period (YYYY-MM-DD).
+        exclude_tag_names: Semicolon-delimited tag names to exclude.
+        tag_group_id: Tag group to filter by.
+        tag_search_text: Search tags by text.
+        limit: Max number of results.
+        offset: Pagination offset.
+        order_by: Sort results by this field.
+        sort_order: "asc" or "desc".
 
     Returns: dict with key 'tags'.
     """

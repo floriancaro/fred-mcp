@@ -112,7 +112,7 @@ async def get_client() -> FredClient:
 
 
 async def reset_client() -> None:
-    """Close and discard the singleton client. For testing only."""
+    """Close and discard the singleton client."""
     global _client
     async with _client_lock:
         if _client is not None:

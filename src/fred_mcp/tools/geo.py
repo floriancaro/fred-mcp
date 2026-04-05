@@ -38,6 +38,11 @@ async def geofred_series_data(
 ) -> dict:
     """Get cross-sectional regional data for a geographic FRED series.
 
+    Args:
+        series_id: FRED series ID (e.g., "WIPCPI").
+        date: Observation date (YYYY-MM-DD). Returns data for this specific date.
+        start_date: Start of date range (YYYY-MM-DD). Returns data from this date onward.
+
     Returns: dict with keys 'meta' and 'data'.
     """
     return await client.get(

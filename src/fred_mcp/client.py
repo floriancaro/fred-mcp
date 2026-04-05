@@ -69,7 +69,7 @@ class FredClient:
                 body = e.response.json()
                 msg = body.get("error_message")
                 detail = f": {msg}" if msg else ""
-            except (ValueError, KeyError):
+            except (ValueError, KeyError, AttributeError):
                 pass
             level = logging.ERROR if e.response.status_code >= 500 else logging.WARNING
             logger.log(level, "HTTP %d for %s%s", e.response.status_code, endpoint, detail)

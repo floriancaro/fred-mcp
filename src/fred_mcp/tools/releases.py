@@ -58,6 +58,15 @@ async def fred_releases_dates(
 ) -> dict:
     """Get release dates for all FRED releases.
 
+    Args:
+        realtime_start: Start of real-time period (YYYY-MM-DD).
+        realtime_end: End of real-time period (YYYY-MM-DD).
+        limit: Max number of results.
+        offset: Pagination offset.
+        order_by: Sort results by this field.
+        sort_order: "asc" or "desc".
+        include_release_dates_with_no_data: If true, include release dates that have no data.
+
     Returns: dict with key 'release_dates'.
     """
     return await client.get(
@@ -108,6 +117,15 @@ async def fred_release_dates(
 ) -> dict:
     """Get release dates for a specific FRED release.
 
+    Args:
+        release_id: FRED release ID.
+        realtime_start: Start of real-time period (YYYY-MM-DD).
+        realtime_end: End of real-time period (YYYY-MM-DD).
+        limit: Max number of results.
+        offset: Pagination offset.
+        sort_order: "asc" or "desc".
+        include_release_dates_with_no_data: If true, include release dates that have no data.
+
     Returns: dict with key 'release_dates'.
     """
     return await client.get(
@@ -154,6 +172,19 @@ async def fred_release_series(
     client: FredClient = Depends(get_client),
 ) -> dict:
     """Get the series on a FRED release.
+
+    Args:
+        release_id: FRED release ID.
+        realtime_start: Start of real-time period (YYYY-MM-DD).
+        realtime_end: End of real-time period (YYYY-MM-DD).
+        limit: Max number of results.
+        offset: Pagination offset.
+        order_by: Sort results by this field.
+        sort_order: "asc" or "desc".
+        filter_variable: Filter by "frequency", "units", or "seasonal_adjustment".
+        filter_value: Value to filter by (depends on filter_variable).
+        tag_names: Semicolon-delimited tag names to filter by (e.g., "usa;gdp").
+        exclude_tag_names: Semicolon-delimited tag names to exclude.
 
     Returns: dict with key 'seriess'.
     """
@@ -273,6 +304,12 @@ async def fred_release_tables(
     client: FredClient = Depends(get_client),
 ) -> dict:
     """Get release table trees for a FRED release.
+
+    Args:
+        release_id: FRED release ID.
+        element_id: Element ID to start the tree from. Omit for the root.
+        include_observation_values: If true, include observation values in the response.
+        observation_date: Observation date (YYYY-MM-DD) for included values.
 
     Returns: dict with key 'elements'.
     """

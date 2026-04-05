@@ -36,6 +36,12 @@ uv tool install fred-mcp-server
 With Docker:
 
 ```bash
+docker pull ghcr.io/floriancaro/fred-mcp-server
+```
+
+Or build from source:
+
+```bash
 docker build -t fred-mcp-server https://github.com/floriancaro/fred-mcp-server.git
 ```
 
@@ -121,7 +127,7 @@ If using the Docker image, replace the `command` field:
   "mcpServers": {
     "fred": {
       "command": "docker",
-      "args": ["run", "-i", "--rm", "-e", "FRED_API_KEY", "fred-mcp-server"],
+      "args": ["run", "-i", "--rm", "-e", "FRED_API_KEY", "ghcr.io/floriancaro/fred-mcp-server"],
       "env": {
         "FRED_API_KEY": "your-api-key-here"
       }
@@ -155,7 +161,7 @@ If using the Docker image, replace the `command` field:
 | `fred_category_children` | Get child categories |
 | `fred_category_related` | Get related categories |
 | `fred_category_series` | Get series in a category |
-| `fred_category_tags` | Get tags for a category |
+| `fred_category_tags` | Get tags for a category, or related tags via `related_to` |
 
 ### Releases
 
@@ -167,7 +173,7 @@ If using the Docker image, replace the `command` field:
 | `fred_release_dates` | Get dates for a release |
 | `fred_release_series` | Get series in a release |
 | `fred_release_sources` | Get sources for a release |
-| `fred_release_tags` | Get tags for a release |
+| `fred_release_tags` | Get tags for a release, or related tags via `related_to` |
 | `fred_release_tables` | Get release table trees |
 
 ### Sources

@@ -105,6 +105,19 @@ async def fred_category_series(
 ) -> dict:
     """Get the series in a FRED category.
 
+    Args:
+        category_id: FRED category ID.
+        realtime_start: Start of real-time period (YYYY-MM-DD).
+        realtime_end: End of real-time period (YYYY-MM-DD).
+        limit: Max number of results.
+        offset: Pagination offset.
+        order_by: Sort results by this field.
+        sort_order: "asc" or "desc".
+        filter_variable: Filter by "frequency", "units", or "seasonal_adjustment".
+        filter_value: Value to filter by (depends on filter_variable).
+        tag_names: Semicolon-delimited tag names to filter by (e.g., "usa;gdp").
+        exclude_tag_names: Semicolon-delimited tag names to exclude.
+
     Returns: dict with key 'seriess'.
     """
     return await client.get(
